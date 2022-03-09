@@ -10,8 +10,9 @@ public class NeuralNetwork
     float[][][] weights; //The weights of all of the connections
 
     //-----------------------------------------CONSTRUCTOR FUNCTIONS-----------------------------------------//
+    
     //Constructor (Will be called when the network is created, only once)
-    public NeuralNetwork(int[] newLayers) //Takes in an int array of all the layers and amount of neurons in them
+    public NeuralNetwork(int[] newLayers, float[][][] newWeights) //Takes in an int array of all the layers and amount of neurons in them
     {
         layers = new int[newLayers.Length]; //Assign an array with the good lenght to the layers array
 
@@ -21,7 +22,7 @@ public class NeuralNetwork
         }
 
         InitNeurons();
-        SetWeights(PopulateTripleArray(defaultValue));
+        SetWeights(newWeights);
     }
 
     //Initializes all the neurons

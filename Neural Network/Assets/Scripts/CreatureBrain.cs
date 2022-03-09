@@ -4,19 +4,17 @@ using UnityEngine;
 
 public class CreatureBrain : MonoBehaviour
 {
-    public Transform target;
+    Transform target;
     public Rigidbody rBody;
     public float fitness = 0f;
     public float multiplicator = 20f;
     
-    NeuralNetwork brain;
+    public NeuralNetwork brain;
 
     // Start is called before the first frame update
     void Start()
     {
-        brain = new NeuralNetwork(new int[]{2,4,4,2});
         target = GameObject.FindWithTag("Finish").transform;
-        brain.Mutate();
     }
 
     void FixedUpdate()
@@ -27,6 +25,6 @@ public class CreatureBrain : MonoBehaviour
 
     void Move(float moveX, float moveZ)
     {
-        rBody.AddForce(new Vector3(moveX * multiplicator, 0f, moveZ * multiplicator)); 
+        rBody.AddForce(new Vector3(moveX * multiplicator, 0f, moveZ * multiplicator));
     }
 }

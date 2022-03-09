@@ -4,23 +4,25 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
-    int numAgents = 10;
-    float wait = 30f;
+    public int numAgents = 10;
+    public float wait = 30f;
     public GameObject AgentPrefab;
     public Transform spawn;
+    public Transform target;
+    public int[] neuronsOnLayers;
+    float[][][] bestWeights;
 
     // Start is called before the first frame update
     void Start()
     {
-        spawn = GameObject.FindWithTag("Start").transform;
+        bestWeights = PopulateTripleArray(neuronsOnLayers, 0f);
         StartCoroutine(SpawnLoop());
     }
 
     IEnumerator SpawnLoop()
     {
-        yield return new WaitForSeconds(5f);
-        while (true)
-        {
+        yield return new WaitForSeconds(2f);
+
         //Spawns new agents
         for (int i = 0; i < numAgents; i++)
         {
@@ -33,10 +35,68 @@ public class SpawnManager : MonoBehaviour
                     ),
                     Quaternion.identity
             );
+            CreatureBrain brain = (CreatureBrain)newAgent.GetComponent(typeof(CreatureBrain));
+            brain.brain = new NeuralNetwork(neuronsOnLayers, bestWeights);
+            brain.brain.Mutate();
             newAgent.transform.SetParent(spawn);
         }
-        //Waits a bit
-        yield return new WaitForSeconds(wait);
+
+        while (true)
+        {
+            yield return new WaitForSeconds(wait);
+            GameObject[] agents = GameObject.FindGameObjectsWithTag("Agent");
+            GameObject bestAgent = null;
+            float bestAgentFitness = float.PositiveInfinity;
+
+            for (int i = 0; i < agents.Length; i++)
+            {
+                //Computes fitness of current agent
+                CreatureBrain currentBrain = (CreatureBrain)agents[i].GetComponent(typeof(CreatureBrain));
+                currentBrain.fitness = ComputeFitness(agents[i]);
+
+                //Gets best agent
+                if (bestAgentFitness > currentBrain.fitness)
+                {
+                    bestAgent = agents[i];
+                    bestAgentFitness = currentBrain.fitness;
+                }
+            }
+            Debug.Log("The best agent was " + bestAgent.name + " with his impressive " + bestAgentFitness + "fitness!!");
         }
+    }
+
+    //Calculates agent fitness
+    float ComputeFitness(GameObject agent)
+    {
+        float distX = Mathf.Abs(target.position.x) - Mathf.Abs(agent.transform.position.x);
+        float distZ = Mathf.Abs(target.position.z) - Mathf.Abs(agent.transform.position.z);
+
+        float agentFitness = Mathf.Pow(distX, 2) + Mathf.Pow(distZ, 2);
+
+        return agentFitness;
+    }
+
+    public float[][][] PopulateTripleArray(int[] layers, float value)
+    {
+        List<float[][]> weightsList = new List<float[][]>(); //Creates list of all weights
+
+        for (int i = 1; i < layers.Length; i++) //Loops over all layers excluding input layer
+        {
+            List<float[]> layerWeightsList = new List<float[]>(); //Creates list of all weights in layers
+            int neuronsInPreviousLayer = layers[i - 1]; //Gets previous layer
+
+            for (int j = 0; j < layers[i]; j++) //Loops over all neurons
+            {
+                float[] neuronWeights = new float[neuronsInPreviousLayer]; //Creates array of weights in one neuron
+
+                for (int k = 0; k < neuronsInPreviousLayer; k++) //Loops over all weights of the current neuron
+                {
+                    neuronWeights[k] = value;
+                }
+                layerWeightsList.Add(neuronWeights); //Adds the weights of the current neuron to the layer
+            }
+            weightsList.Add(layerWeightsList.ToArray()); //Adds the weights of the layer to the weights
+        }
+        return weightsList.ToArray(); //Sets weight to new weights
     }
 }

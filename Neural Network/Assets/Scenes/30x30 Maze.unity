@@ -166,8 +166,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eea0863435084c242aaf553cc44e6638, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  numAgents: 20
+  wait: 10
   AgentPrefab: {fileID: 3508640190371475914, guid: 7e82c9b4ba89d7049aa52e4b2925cbfc, type: 3}
   spawn: {fileID: 1082692509}
+  target: {fileID: 734276666}
+  neuronsOnLayers: 02000000040000000400000002000000
 --- !u!1 &430207792
 GameObject:
   m_ObjectHideFlags: 0
@@ -768,7 +772,7 @@ Transform:
   m_LocalScale: {x: 4, y: 3, z: 4}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
 --- !u!1 &802524712
 GameObject:
@@ -996,7 +1000,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.39607847, g: 0.41960788, b: 0.44705886, a: 1}
+  m_BackGroundColor: {r: 0.13725491, g: 0.1764706, b: 0.23529413, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -1122,7 +1126,7 @@ Transform:
   m_LocalScale: {x: 4, y: 3, z: 4}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
 --- !u!1 &1381035554
 GameObject:
