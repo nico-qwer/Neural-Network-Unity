@@ -61,15 +61,15 @@ public class SpawnManager : MonoBehaviour
                     bestAgentFitness = currentBrain.fitness;
                 }
             }
-            Debug.Log("The best agent was " + bestAgent.name + " with his impressive " + bestAgentFitness + "fitness!!");
+            Debug.Log("The best agent was " + bestAgent.name + " with his impressive " + bestAgentFitness + " fitness!!", bestAgent);
         }
     }
 
     //Calculates agent fitness
     float ComputeFitness(GameObject agent)
     {
-        float distX = Mathf.Abs(target.position.x) - Mathf.Abs(agent.transform.position.x);
-        float distZ = Mathf.Abs(target.position.z) - Mathf.Abs(agent.transform.position.z);
+        float distX = target.position.x - agent.transform.position.x;
+        float distZ = target.position.z - agent.transform.position.z;
 
         float agentFitness = Mathf.Pow(distX, 2) + Mathf.Pow(distZ, 2);
 
