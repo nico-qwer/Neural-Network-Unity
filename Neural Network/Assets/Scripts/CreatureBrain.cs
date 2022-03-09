@@ -7,6 +7,7 @@ public class CreatureBrain : MonoBehaviour
     public Transform target;
     public Rigidbody rBody;
     public float fitness = 0f;
+    public float multiplicator = 20f;
     
     NeuralNetwork brain;
 
@@ -15,7 +16,6 @@ public class CreatureBrain : MonoBehaviour
     {
         brain = new NeuralNetwork(new int[]{2,4,4,2});
         target = GameObject.FindWithTag("Finish").transform;
-
         brain.Mutate();
     }
 
@@ -27,6 +27,6 @@ public class CreatureBrain : MonoBehaviour
 
     void Move(float moveX, float moveZ)
     {
-        rBody.AddForce(new Vector3(moveX, 0f, moveZ)); 
+        rBody.AddForce(new Vector3(moveX * multiplicator, 0f, moveZ * multiplicator)); 
     }
 }

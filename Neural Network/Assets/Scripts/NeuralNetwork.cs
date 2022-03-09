@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class NeuralNetwork
 {
-    float defaultValue = 0.5f; //Default weight assigned at the beginning 
+    float defaultValue = 0f; //Default weight assigned at the beginning 
     int[] layers; //The layers and their amount of neurons
     float[][] neurons; //The values of all of the neurons
     float[][][] weights; //The weights of all of the connections
@@ -21,7 +21,7 @@ public class NeuralNetwork
         }
 
         InitNeurons();
-        InitWeights();
+        SetWeights(PopulateTripleArray(defaultValue));
     }
 
     //Initializes all the neurons
@@ -35,7 +35,7 @@ public class NeuralNetwork
 
             for (int j = 0; j < neuronValues.Length; j++) //Loops over all neurons
             {
-                neuronValues[j] = 0f; //Assigns a default value to each neuron
+                neuronValues[j] = defaultValue; //Assigns a default value to each neuron
             }
 
             neuronsList.Add(new float[layers[i]]); //Adds layer to neurons list
@@ -45,7 +45,7 @@ public class NeuralNetwork
     }
 
     //Initializes all the weights
-    void InitWeights()
+    public void SetWeights(float[][][] newWeights)
     {
         List<float[][]> weightsList = new List<float[][]>(); //Creates list of all weights
 
@@ -60,7 +60,7 @@ public class NeuralNetwork
 
                 for (int k = 0; k < neuronsInPreviousLayer; k++) //Loops over all weights of the current neuron
                 {
-                    neuronWeights[k] = defaultValue; //Assigns a default value to the weight
+                    neuronWeights[k] = newWeights[i - 1][j][k]; //Assigns a value to the weight
                 }
                 layerWeightsList.Add(neuronWeights); //Adds the weights of the current neuron to the layer
             }
@@ -133,5 +133,34 @@ public class NeuralNetwork
 
         }
         return neurons[layers.Length - 1]; //Outputs the values of the last layer of neurons
+    }
+
+    public float[][][] GetWeights()
+    {
+        return weights;
+    }
+
+    public float[][][] PopulateTripleArray(float defaultValue = 0f)
+    {
+        List<float[][]> weightsList = new List<float[][]>(); //Creates list of all weights
+
+        for (int i = 1; i < layers.Length; i++) //Loops over all layers excluding input layer
+        {
+            List<float[]> layerWeightsList = new List<float[]>(); //Creates list of all weights in layers
+            int neuronsInPreviousLayer = layers[i - 1]; //Gets previous layer
+
+            for (int j = 0; j < neurons[i].Length; j++) //Loops over all neurons
+            {
+                float[] neuronWeights = new float[neuronsInPreviousLayer]; //Creates array of weights in one neuron
+
+                for (int k = 0; k < neuronsInPreviousLayer; k++) //Loops over all weights of the current neuron
+                {
+                    neuronWeights[k] = defaultValue; //Assigns a value to the weight
+                }
+                layerWeightsList.Add(neuronWeights); //Adds the weights of the current neuron to the layer
+            }
+            weightsList.Add(layerWeightsList.ToArray()); //Adds the weights of the layer to the weights
+        }
+        return weightsList.ToArray(); //Sets weight to new weights
     }
 }
