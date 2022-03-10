@@ -8,6 +8,7 @@ public class NeuralNetwork
     int[] layers; //The layers and their amount of neurons
     float[][] neurons; //The values of all of the neurons
     float[][][] weights; //The weights of all of the connections
+    public int Generation = 0;
 
     //-----------------------------------------CONSTRUCTOR FUNCTIONS-----------------------------------------//
     
@@ -74,6 +75,7 @@ public class NeuralNetwork
     //Mutates weights 
     public void Mutate()
     {
+        float bias = Mathf.Clamp(((float)Generation / 20f), 0f, 0.5f);
         for (int i = 1; i < layers.Length; i++) //Loops over all layers excluding input layer
         {
             int neuronsInPreviousLayer = layers[i - 1]; //Gets previous layer
@@ -81,29 +83,9 @@ public class NeuralNetwork
             {
                 for (int k = 0; k < neuronsInPreviousLayer; k++) //Loops over all weights of the current neuron
                 {
-                    int rng = Random.Range(0, 100); //Chooses a random number between 0 and 100
-
-                    //Mutates weight depending on rng variable
-                    if (rng < 2)
-                    {                                                   //2% chance of flipping weight
-                        weights[i - 1][j][k] = -weights[i - 1][j][k];
-                    }
-                    else if (rng < 32)
-                    {                                                   //30% chance of adding 0.05
-                        weights[i - 1][j][k] = weights[i - 1][j][k] + 0.05f;
-                    }
-                    else if (rng < 62)
-                    {                                                   //30% chance of subtracting 0.05
-                        weights[i - 1][j][k] = weights[i - 1][j][k] - 0.05f;
-                    }
-                    else if (rng < 81)
-                    {                                                   //19% chance of adding 0.1
-                        weights[i - 1][j][k] = weights[i - 1][j][k] + 0.1f;
-                    }
-                    else
-                    {                                                   //19% chance of subtracting 0.1
-                        weights[i - 1][j][k] = weights[i - 1][j][k] - 0.1f;
-                    }
+                    float rng = Random.value; //Chooses a random value
+                    rng = BiasFunction(rng, bias);
+                    weights[i - 1][j][k] += (rng * 2 - 0.5f) / 8f;
                 }
             }
         }
@@ -163,5 +145,11 @@ public class NeuralNetwork
             weightsList.Add(layerWeightsList.ToArray()); //Adds the weights of the layer to the weights
         }
         return weightsList.ToArray(); //Sets weight to new weights
+    }
+
+    float BiasFunction(float x, float bias)
+    {
+        float k = Mathf.Pow(1-bias, 3);
+        return (x * k) / (x * k - x + 1);
     }
 }

@@ -4,12 +4,25 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
+    [HideInInspector]
     public int Generation = 0;
+
+    [Header("Parameters")]
     public int numAgents = 10;
     public float wait = 30f;
+    public float timeMultiplier = 1f;
+
+    [Header("Limits")]
+    public float maxSpeed = 10f;
+    public float wallPunition = 2f;
+    public float speedPunition = 2f;
+    
+    [Header("References")]
     public GameObject AgentPrefab;
     public Transform spawn;
     public Transform target;
+    public Material normalMat;
+    public Material bestMat;
     public int[] neuronsOnLayers;
     float[][][] bestWeights;
 
@@ -18,6 +31,34 @@ public class SpawnManager : MonoBehaviour
     {
         bestWeights = PopulateTripleArray(neuronsOnLayers, 0f);
         StartCoroutine(SpawnLoop());
+    }
+
+    void Update()
+    {
+        Time.timeScale = timeMultiplier;
+
+        if (Generation != 0)
+        {
+            GameObject[] agents = GameObject.FindGameObjectsWithTag("Agent");
+            GameObject bestAgent = null;
+            float bestAgentFitness = float.PositiveInfinity;
+            for (int j = 0; j < agents.Length; j++)
+            {
+                //Computes fitness of current agent
+                CreatureBrain currentBrain = (CreatureBrain)agents[j].GetComponent(typeof(CreatureBrain));
+                currentBrain.fitness = ComputeFitness(agents[j]);
+
+                //Gets best agent
+                if (bestAgentFitness > currentBrain.fitness)
+                {
+                    bestAgent = agents[j];
+                    bestAgentFitness = currentBrain.fitness;
+                }
+
+                agents[j].GetComponent<Renderer>().material = normalMat;
+            }
+            bestAgent.GetComponent<Renderer>().material = bestMat;
+        }
     }
 
     IEnumerator SpawnLoop()
@@ -43,9 +84,13 @@ public class SpawnManager : MonoBehaviour
         }
         Generation = 1;
 
+        //Resets agents with new brain
         while (true)
         {
             yield return new WaitForSeconds(wait);
+            
+            Generation++;
+
             GameObject[] agents = GameObject.FindGameObjectsWithTag("Agent");
             GameObject bestAgent = null;
             float bestAgentFitness = float.PositiveInfinity;
@@ -66,31 +111,42 @@ public class SpawnManager : MonoBehaviour
 
             CreatureBrain brain = (CreatureBrain)bestAgent.GetComponent(typeof(CreatureBrain));
             bestWeights = brain.brain.GetWeights();
-            //Debug.Log("The best agent was " + bestAgent.name + " with his impressive " + bestAgentFitness + " fitness!!", bestAgent);
+            Debug.Log("The best agent was " + bestAgent.name + " with his impressive " + bestAgentFitness + " fitness!!", bestAgent);
 
             for (int i = 0; i < agents.Length; i++)
             {
-                if (agents[i] == bestAgent) 
+                if (agents[i] == bestAgent)
                 {
                     agents[i].transform.position = spawn.position;
                     continue;
                 }
                 CreatureBrain currentBrain = (CreatureBrain)agents[i].GetComponent(typeof(CreatureBrain));
                 currentBrain.brain.SetWeights(bestWeights);
+                currentBrain.brain.Generation = Generation;
                 currentBrain.brain.Mutate();
                 agents[i].transform.position = spawn.position;
             }
-            Generation++;
         }
     }
 
     //Calculates agent fitness
     float ComputeFitness(GameObject agent)
     {
+        CreatureBrain currentBrain = (CreatureBrain)agent.GetComponent(typeof(CreatureBrain));
+
+        float[] directions = currentBrain.brain.Compute(new float[]{target.position.x, target.position.z, agent.transform.position.x, agent.transform.position.z});
+
         float distX = target.position.x - agent.transform.position.x;
         float distZ = target.position.z - agent.transform.position.z;
 
         float agentFitness = Mathf.Pow(distX, 2) + Mathf.Pow(distZ, 2);
+
+       agentFitness += currentBrain.collided * wallPunition;
+
+        if (directions[0] + directions[1] > maxSpeed || directions[0] + directions[1] < -maxSpeed && Generation >= 1)
+        {
+            agentFitness = agentFitness * speedPunition;
+        }
 
         return agentFitness;
     }
