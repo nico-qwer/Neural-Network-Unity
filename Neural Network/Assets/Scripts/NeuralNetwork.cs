@@ -85,7 +85,7 @@ public class NeuralNetwork
                 {
                     float rng = Random.value; //Chooses a random value
                     rng = BiasFunction(rng, bias);
-                    weights[i - 1][j][k] += (rng * 2 - 0.5f) / 8f;
+                    weights[i - 1][j][k] += Mathf.Clamp((rng * 2 - 0.5f) / 8f, -0.5f, 0.5f);
                 }
             }
         }
