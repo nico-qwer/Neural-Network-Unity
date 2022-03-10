@@ -19,8 +19,8 @@ public class CreatureBrain : MonoBehaviour
 
     void FixedUpdate()
     {
-        float[] directions = brain.Compute(new float[]{target.position.x, target.position.z});
-        Move(directions[0], directions[1]);
+        float[] directions = brain.Compute(new float[]{target.position.x, target.position.z, transform.position.x, transform.position.z});
+        Move(Mathf.Clamp(directions[0], float.NegativeInfinity, 20), Mathf.Clamp(directions[1], float.NegativeInfinity, 20));
     }
 
     void Move(float moveX, float moveZ)

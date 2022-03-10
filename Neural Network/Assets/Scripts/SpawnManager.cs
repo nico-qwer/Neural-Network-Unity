@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
+    public int Generation = 0;
     public int numAgents = 10;
     public float wait = 30f;
     public GameObject AgentPrefab;
@@ -40,6 +41,7 @@ public class SpawnManager : MonoBehaviour
             brain.brain.Mutate();
             newAgent.transform.SetParent(spawn);
         }
+        Generation = 1;
 
         while (true)
         {
@@ -61,7 +63,24 @@ public class SpawnManager : MonoBehaviour
                     bestAgentFitness = currentBrain.fitness;
                 }
             }
+
+            CreatureBrain brain = (CreatureBrain)bestAgent.GetComponent(typeof(CreatureBrain));
+            bestWeights = brain.brain.GetWeights();
             Debug.Log("The best agent was " + bestAgent.name + " with his impressive " + bestAgentFitness + " fitness!!", bestAgent);
+
+            for (int i = 0; i < agents.Length; i++)
+            {
+                if (agents[i] == bestAgent) 
+                {
+                    agents[i].transform.position = spawn.position;
+                    continue;
+                }
+                CreatureBrain currentBrain = (CreatureBrain)agents[i].GetComponent(typeof(CreatureBrain));
+                currentBrain.brain.SetWeights(bestWeights);
+                currentBrain.brain.Mutate();
+                agents[i].transform.position = spawn.position;
+                Generation++;
+            }
         }
     }
 

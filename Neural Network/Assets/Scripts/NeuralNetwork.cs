@@ -89,20 +89,20 @@ public class NeuralNetwork
                         weights[i - 1][j][k] = -weights[i - 1][j][k];
                     }
                     else if (rng < 32)
-                    {                                                   //30% chance of adding 0.1
-                        weights[i - 1][j][k] = weights[i - 1][j][k] + 0.1f;
+                    {                                                   //30% chance of adding 0.05
+                        weights[i - 1][j][k] = weights[i - 1][j][k] + 0.05f;
                     }
                     else if (rng < 62)
-                    {                                                   //30% chance of subtracting 0.1
-                        weights[i - 1][j][k] = weights[i - 1][j][k] - 0.1f;
+                    {                                                   //30% chance of subtracting 0.05
+                        weights[i - 1][j][k] = weights[i - 1][j][k] - 0.05f;
                     }
                     else if (rng < 81)
-                    {                                                   //19% chance of adding 0.3
-                        weights[i - 1][j][k] = weights[i - 1][j][k] + 0.3f;
+                    {                                                   //19% chance of adding 0.1
+                        weights[i - 1][j][k] = weights[i - 1][j][k] + 0.1f;
                     }
                     else
-                    {                                                   //19% chance of subtracting 0.3
-                        weights[i - 1][j][k] = weights[i - 1][j][k] - 0.3f;
+                    {                                                   //19% chance of subtracting 0.1
+                        weights[i - 1][j][k] = weights[i - 1][j][k] - 0.1f;
                     }
                 }
             }
