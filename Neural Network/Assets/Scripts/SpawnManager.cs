@@ -66,7 +66,7 @@ public class SpawnManager : MonoBehaviour
 
             CreatureBrain brain = (CreatureBrain)bestAgent.GetComponent(typeof(CreatureBrain));
             bestWeights = brain.brain.GetWeights();
-            Debug.Log("The best agent was " + bestAgent.name + " with his impressive " + bestAgentFitness + " fitness!!", bestAgent);
+            //Debug.Log("The best agent was " + bestAgent.name + " with his impressive " + bestAgentFitness + " fitness!!", bestAgent);
 
             for (int i = 0; i < agents.Length; i++)
             {
@@ -79,8 +79,8 @@ public class SpawnManager : MonoBehaviour
                 currentBrain.brain.SetWeights(bestWeights);
                 currentBrain.brain.Mutate();
                 agents[i].transform.position = spawn.position;
-                Generation++;
             }
+            Generation++;
         }
     }
 
