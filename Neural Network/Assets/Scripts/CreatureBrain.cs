@@ -22,7 +22,7 @@ public class CreatureBrain : MonoBehaviour
     void FixedUpdate()
     {
         float[] directions = brain.Compute(new float[]{target.position.x, target.position.z, transform.position.x, transform.position.z});
-        Move(Mathf.Clamp(directions[0], float.NegativeInfinity, 20), Mathf.Clamp(directions[1], float.NegativeInfinity, 20));
+        Move(Mathf.Clamp(directions[0], float.NegativeInfinity, 2), Mathf.Clamp(directions[1], float.NegativeInfinity, 2));
     }
 
     void OnCollisionEnter(Collision collisionInfo)

@@ -148,7 +148,7 @@ public class SpawnManager : MonoBehaviour
             agentFitness = agentFitness * speedPunition;
         }
 
-        return agentFitness;
+        return Mathf.Abs(agentFitness);
     }
 
     public float[][][] PopulateTripleArray(int[] layers, float value)

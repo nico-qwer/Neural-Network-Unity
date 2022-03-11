@@ -170,9 +170,9 @@ MonoBehaviour:
   numAgents: 50
   wait: 5
   timeMultiplier: 1
-  maxSpeed: 10
+  maxSpeed: 0.5
   wallPunition: 5
-  speedPunition: 5
+  speedPunition: 21.4
   AgentPrefab: {fileID: 3508640190371475914, guid: 7e82c9b4ba89d7049aa52e4b2925cbfc, type: 3}
   spawn: {fileID: 1082692509}
   target: {fileID: 734276666}
