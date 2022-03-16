@@ -13,9 +13,7 @@ public class SpawnManager : MonoBehaviour
     public float timeMultiplier = 1f;
 
     [Header("Limits")]
-    public float maxSpeed = 10f;
     public float wallPunition = 2f;
-    public float speedPunition = 2f;
     
     [Header("References")]
     public GameObject AgentPrefab;
@@ -115,12 +113,13 @@ public class SpawnManager : MonoBehaviour
 
             for (int i = 0; i < agents.Length; i++)
             {
+                CreatureBrain currentBrain = (CreatureBrain)agents[i].GetComponent(typeof(CreatureBrain));
+                currentBrain.collided = 0f;
                 if (agents[i] == bestAgent)
                 {
                     agents[i].transform.position = spawn.position;
                     continue;
                 }
-                CreatureBrain currentBrain = (CreatureBrain)agents[i].GetComponent(typeof(CreatureBrain));
                 currentBrain.brain.SetWeights(bestWeights);
                 currentBrain.brain.Generation = Generation;
                 currentBrain.brain.Mutate();
@@ -142,11 +141,6 @@ public class SpawnManager : MonoBehaviour
         float agentFitness = Mathf.Pow(distX, 2) + Mathf.Pow(distZ, 2);
 
        agentFitness += currentBrain.collided * wallPunition;
-
-        if (directions[0] + directions[1] > maxSpeed || directions[0] + directions[1] < -maxSpeed && Generation >= 1)
-        {
-            agentFitness = agentFitness * speedPunition;
-        }
 
         return Mathf.Abs(agentFitness);
     }

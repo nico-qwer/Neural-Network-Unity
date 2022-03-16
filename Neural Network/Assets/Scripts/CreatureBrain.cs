@@ -22,7 +22,7 @@ public class CreatureBrain : MonoBehaviour
     void FixedUpdate()
     {
         float[] directions = brain.Compute(new float[]{target.position.x, target.position.z, transform.position.x, transform.position.z});
-        Move(Mathf.Clamp(directions[0], float.NegativeInfinity, 2), Mathf.Clamp(directions[1], float.NegativeInfinity, 2));
+        Move(Mathf.Clamp(directions[0], -2, 2), Mathf.Clamp(directions[1], -2, 2));
     }
 
     void OnCollisionEnter(Collision collisionInfo)
@@ -34,7 +34,7 @@ public class CreatureBrain : MonoBehaviour
     {
         if (collisionInfo.collider.tag == "Wall" || collisionInfo.collider.tag == "WallSegment")
         {
-            collided = collisionTime - Time.time;
+            collided += Time.time - collisionTime;
         }
     }
 
