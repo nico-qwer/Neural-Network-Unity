@@ -75,7 +75,7 @@ public class NeuralNetwork
     //Mutates weights 
     public void Mutate()
     {
-        float bias = Mathf.Clamp(((float)Generation / 20f), 0f, 0.5f);
+        float bias = Mathf.Clamp(((float)Generation / 20f), 0f, 0.3f);
         for (int i = 1; i < layers.Length; i++) //Loops over all layers excluding input layer
         {
             int neuronsInPreviousLayer = layers[i - 1]; //Gets previous layer
