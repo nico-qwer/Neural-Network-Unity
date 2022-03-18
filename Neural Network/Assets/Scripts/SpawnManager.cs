@@ -17,6 +17,7 @@ public class SpawnManager : MonoBehaviour
 
     [Header("References")]
     public GameObject AgentPrefab;
+    public SpawnMaze mazeGen;
     public Transform spawn;
     public Transform target;
     public Material normalMat;
@@ -43,6 +44,7 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator SpawnLoop()
     {
+        mazeGen.CreateMap();
         yield return new WaitForSeconds(2f);
 
         //Spawns new agents
@@ -94,6 +96,8 @@ public class SpawnManager : MonoBehaviour
             bestWeights = brain.brain.GetWeights();
             Debug.Log("The best agent was " + bestAgent.name + " with his impressive " + bestAgentFitness + " fitness!!", bestAgent);
 
+            mazeGen.CreateMap();
+            
             for (int i = 0; i < agents.Length; i++)
             {
                 CreatureBrain currentBrain = (CreatureBrain)agents[i].GetComponent(typeof(CreatureBrain));
