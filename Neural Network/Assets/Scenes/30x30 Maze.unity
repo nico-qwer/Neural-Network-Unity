@@ -170,15 +170,13 @@ MonoBehaviour:
   numAgents: 50
   wait: 5
   timeMultiplier: 1
-  maxSpeed: 0.5
   wallPunition: 5
-  speedPunition: 119.9
   AgentPrefab: {fileID: 3508640190371475914, guid: 7e82c9b4ba89d7049aa52e4b2925cbfc, type: 3}
   spawn: {fileID: 1082692509}
   target: {fileID: 734276666}
   normalMat: {fileID: 2100000, guid: 733d3b17d4889e047a209b2fa7d9733d, type: 2}
   bestMat: {fileID: 2100000, guid: 66ead4bc6858bef4182a4d8d3c9cf57b, type: 2}
-  neuronsOnLayers: 04000000060000000600000002000000
+  neuronsOnLayers: 08000000060000000600000002000000
 --- !u!1 &200196886
 GameObject:
   m_ObjectHideFlags: 0
@@ -1308,7 +1306,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1657316925}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: a62e1efff07dc5c44be56ce33054c9f5, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2

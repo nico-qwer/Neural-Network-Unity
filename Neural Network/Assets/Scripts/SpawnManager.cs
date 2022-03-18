@@ -14,7 +14,7 @@ public class SpawnManager : MonoBehaviour
 
     [Header("Limits")]
     public float wallPunition = 2f;
-    
+
     [Header("References")]
     public GameObject AgentPrefab;
     public Transform spawn;
@@ -37,25 +37,7 @@ public class SpawnManager : MonoBehaviour
 
         if (Generation != 0)
         {
-            GameObject[] agents = GameObject.FindGameObjectsWithTag("Agent");
-            GameObject bestAgent = null;
-            float bestAgentFitness = float.PositiveInfinity;
-            for (int j = 0; j < agents.Length; j++)
-            {
-                //Computes fitness of current agent
-                CreatureBrain currentBrain = (CreatureBrain)agents[j].GetComponent(typeof(CreatureBrain));
-                currentBrain.fitness = ComputeFitness(agents[j]);
-
-                //Gets best agent
-                if (bestAgentFitness > currentBrain.fitness)
-                {
-                    bestAgent = agents[j];
-                    bestAgentFitness = currentBrain.fitness;
-                }
-
-                agents[j].GetComponent<Renderer>().material = normalMat;
-            }
-            bestAgent.GetComponent<Renderer>().material = bestMat;
+            Invoke("UpdateVisuals", 0.05f);
         }
     }
 
@@ -75,6 +57,7 @@ public class SpawnManager : MonoBehaviour
                     ),
                     Quaternion.identity
             );
+            newAgent.name = "Agent " + i.ToString();
             CreatureBrain brain = (CreatureBrain)newAgent.GetComponent(typeof(CreatureBrain));
             brain.brain = new NeuralNetwork(neuronsOnLayers, bestWeights);
             brain.brain.Mutate();
@@ -86,7 +69,7 @@ public class SpawnManager : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(wait);
-            
+
             Generation++;
 
             GameObject[] agents = GameObject.FindGameObjectsWithTag("Agent");
@@ -132,15 +115,13 @@ public class SpawnManager : MonoBehaviour
     float ComputeFitness(GameObject agent)
     {
         CreatureBrain currentBrain = (CreatureBrain)agent.GetComponent(typeof(CreatureBrain));
-
-        float[] directions = currentBrain.brain.Compute(new float[]{target.position.x, target.position.z, agent.transform.position.x, agent.transform.position.z});
-
+        
         float distX = target.position.x - agent.transform.position.x;
         float distZ = target.position.z - agent.transform.position.z;
-
+        
         float agentFitness = Mathf.Pow(distX, 2) + Mathf.Pow(distZ, 2);
 
-       agentFitness += currentBrain.collided * wallPunition;
+        agentFitness += currentBrain.collided * wallPunition;
 
         return Mathf.Abs(agentFitness);
     }
@@ -167,5 +148,26 @@ public class SpawnManager : MonoBehaviour
             weightsList.Add(layerWeightsList.ToArray()); //Adds the weights of the layer to the weights
         }
         return weightsList.ToArray(); //Sets weight to new weights
+    }
+    void UpdateVisuals()
+    {
+        GameObject[] agents = GameObject.FindGameObjectsWithTag("Agent");
+        GameObject bestAgent = null;
+        float bestAgentFitness = float.PositiveInfinity;
+        for (int i = 0; i < agents.Length; i++)
+        {
+            //Computes fitness of current agent          
+            CreatureBrain currentBrain = (CreatureBrain)agents[i].GetComponent(typeof(CreatureBrain));
+            float currentFitness = ComputeFitness(agents[i]);
+
+            //Gets best agent
+            if (bestAgentFitness > currentFitness)
+            {
+                bestAgent = agents[i];
+                bestAgentFitness = currentFitness;
+            }
+            agents[i].GetComponent<Renderer>().material = normalMat;
+        }
+        bestAgent.GetComponent<Renderer>().material = bestMat;
     }
 }
