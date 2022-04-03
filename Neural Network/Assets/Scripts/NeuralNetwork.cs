@@ -75,7 +75,8 @@ public class NeuralNetwork
     //Mutates weights 
     public void Mutate()
     {
-        float bias = Mathf.Clamp(((float)Generation / 20f), 0f, 0.3f);
+        float bias = Mathf.Clamp(((float)Generation / 100f), 0f, 0.8f);
+
         for (int i = 1; i < layers.Length; i++) //Loops over all layers excluding input layer
         {
             int neuronsInPreviousLayer = layers[i - 1]; //Gets previous layer
@@ -84,8 +85,8 @@ public class NeuralNetwork
                 for (int k = 0; k < neuronsInPreviousLayer; k++) //Loops over all weights of the current neuron
                 {
                     float rng = Random.value; //Chooses a random value
-                    rng = BiasFunction(rng, bias);
-                    weights[i - 1][j][k] += Mathf.Clamp((rng * 2 - 0.5f) / 8f, -0.5f, 0.5f);
+                    float biasedRng = BiasFunction(rng, bias);
+                    weights[i - 1][j][k] = Normalize(weights[i - 1][j][k] + biasedRng);
                 }
             }
         }
@@ -149,7 +150,13 @@ public class NeuralNetwork
 
     float BiasFunction(float x, float bias)
     {
-        float k = Mathf.Pow(1-bias, 3);
-        return (x * k) / (x * k - x + 1);
+        float k = Mathf.Pow(1f - bias, 3);
+        return (x * k) / (x * k - x + 1f);
+    }
+
+    float Normalize(float x)
+    {
+        float k =  1f / (1f + Mathf.Exp(x));
+        return k * 2f - 1f; 
     }
 }

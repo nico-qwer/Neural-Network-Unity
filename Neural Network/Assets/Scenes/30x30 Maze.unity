@@ -834,7 +834,7 @@ MonoBehaviour:
   Generation: 0
   numAgents: 50
   wait: 5
-  timeMultiplier: 1
+  timeMultiplier: 2
   wallPunition: 0
   AgentPrefab: {fileID: 3508640190371475914, guid: 7e82c9b4ba89d7049aa52e4b2925cbfc, type: 3}
   mazeGen: {fileID: 507865816}
@@ -842,7 +842,7 @@ MonoBehaviour:
   target: {fileID: 734276666}
   normalMat: {fileID: 2100000, guid: 733d3b17d4889e047a209b2fa7d9733d, type: 2}
   bestMat: {fileID: 2100000, guid: 66ead4bc6858bef4182a4d8d3c9cf57b, type: 2}
-  neuronsOnLayers: 08000000060000000600000002000000
+  neuronsOnLayers: 06000000080000000800000002000000
 --- !u!1 &199855831
 GameObject:
   m_ObjectHideFlags: 0

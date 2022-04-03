@@ -22,11 +22,15 @@ public class CreatureBrain : MonoBehaviour
 
     void FixedUpdate()
     {
+        Vector2 targetDirection = new Vector2(
+            target.position.x - transform.position.x,
+            target.position.z - transform.position.z
+        );
+
+        targetDirection.Normalize();
         float[] directions = brain.Compute(new float[]{
-            target.position.x, 
-            target.position.z, 
-            transform.position.x, 
-            transform.position.z,
+            targetDirection.x,
+            targetDirection.y,
             eyes[0].activated,
             eyes[1].activated,
             eyes[2].activated,
